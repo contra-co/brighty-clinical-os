@@ -198,4 +198,36 @@ function Consent(){return <div><TopBar title="Consent & Preferences" back/><div 
 
 function Prototype({screen}:{screen:string}){switch(screen){case'login':return <Login/>;case'roles':return <Roles/>;case'dashboard':return <Dashboard/>;case'patients':return <Patients/>;case'case':return <CaseOverview/>;case'journey':return <Journey/>;case'media':return <Media/>;case'smile-facial':return <SmileDesign mode="Facial"/>;case'smile-smile':return <SmileDesign mode="Smile"/>;case'smile-profile':return <SmileDesign mode="Profile"/>;case'design-decision':return <DesignDecision/>;case'treatment':return <DentalChart/>;case'tooth':return <ToothDetail/>;case'pretreatment':return <Gate/>;case'execution':return <Execution/>;case'deviation':return <Deviation/>;case'lab-sheet':return <LabSheet/>;case'lab-tracking':return <LabTracking/>;case'final-gate':return <Gate final/>;case'ai':return <AI/>;case'voice':return <Voice/>;case'followup':return <FollowUp/>;case'concerns':return <Concerns/>;case'notifications':return <Notifications/>;case'md-dashboard':return <MDDashboard/>;case'ceo':return <CEO/>;case'outcomes':return <Outcomes/>;case'audit':return <Audit/>;case'users':return <Users/>;case'permissions':return <Permissions/>;case'p-login':return <PatientLogin/>;case'p-home':return <PatientHome/>;case'p-journey':return <PatientJourney/>;case'p-media':return <PatientMedia/>;case'p-smile':return <PatientSmile/>;case'p-progress':return <PatientProgress/>;case'p-appointments':return <PatientAppointments/>;case'p-aftercare':return <Aftercare/>;case'p-ai':return <PatientAI/>;case'p-concern':return <PatientConcern/>;case'p-before-after':return <BeforeAfter/>;case'p-consent':return <Consent/>;default:return <Dashboard/>}}
 
-export default function Page(){const [screen,setScreen]=useState('dashboard');const groups=useMemo(()=>Array.from(new Set(screens.map(s=>s.group))),[]);return <main className="studio"><aside className="navigator"><Brand/><h2>Mobile Prototype</h2><p>Brighty Clinical OS AI</p>{groups.map(g=><div className="navGroup" key={g}><small>{g}</small>{screens.filter(s=>s.group===g).map(s=><button key={s.id} onClick={()=>setScreen(s.id)} className={screen===s.id?'active':''}>{s.label}</button>)}</div>)}<a className="reference" href="/reference.png" target="_blank">Open visual reference ↗</a></aside><section className="previewArea"><div className="previewHeader"><div><b>{screens.find(s=>s.id===screen)?.label}</b><small>Interactive Next.js screen</small></div><span>390 × 844 mobile viewport</span></div><div className="phone"><div className="notch"></div><div className="phoneScreen"><Prototype screen={screen}/></div></div></section></main>}
+export default function Page(){
+  const [screen,setScreen]=useState('dashboard');
+  const [mobileNavOpen,setMobileNavOpen]=useState(false);
+  const groups=useMemo(()=>Array.from(new Set(screens.map(s=>s.group))),[]);
+  const current=screens.find(s=>s.id===screen);
+  const chooseScreen=(id:string)=>{setScreen(id);setMobileNavOpen(false);window.scrollTo({top:0,behavior:'smooth'});};
+  return <main className="studio">
+    <aside className="navigator">
+      <Brand/><h2>Mobile Prototype</h2><p>Brighty Clinical OS AI</p>
+      {groups.map(g=><div className="navGroup" key={g}><small>{g}</small>{screens.filter(s=>s.group===g).map(s=><button key={s.id} onClick={()=>chooseScreen(s.id)} className={screen===s.id?'active':''}>{s.label}</button>)}</div>)}
+      <a className="reference" href="/reference.png" target="_blank">Open visual reference ↗</a>
+    </aside>
+
+    <button className="mobileScreenButton" onClick={()=>setMobileNavOpen(true)} aria-label="Open screen navigator">
+      <Menu size={18}/><span>All Screens</span>
+    </button>
+
+    {mobileNavOpen&&<div className="mobileNavOverlay" onClick={()=>setMobileNavOpen(false)}>
+      <div className="mobileNavDrawer" onClick={e=>e.stopPropagation()}>
+        <div className="mobileNavHead"><Brand/><button onClick={()=>setMobileNavOpen(false)} aria-label="Close navigator"><X size={20}/></button></div>
+        <div className="mobileCurrentScreen"><small>Current screen</small><b>{current?.label}</b></div>
+        <div className="mobileNavScroll">
+          {groups.map(g=><div className="mobileNavGroup" key={g}><small>{g}</small>{screens.filter(s=>s.group===g).map(s=><button key={s.id} onClick={()=>chooseScreen(s.id)} className={screen===s.id?'active':''}><span>{s.label}</span><ChevronRight size={16}/></button>)}</div>)}
+        </div>
+      </div>
+    </div>}
+
+    <section className="previewArea">
+      <div className="previewHeader"><div><b>{current?.label}</b><small>Interactive Next.js screen</small></div><span>390 × 844 mobile viewport</span></div>
+      <div className="phone"><div className="notch"></div><div className="phoneScreen"><Prototype screen={screen}/></div></div>
+    </section>
+  </main>
+}
