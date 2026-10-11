@@ -10,8 +10,6 @@ import {
   UsersRound, X, Clock3, ScanLine, BadgeCheck, HeartPulse, ClipboardList, LockKeyhole, UserCog, BarChart3, PhoneCall, BookOpenCheck
 } from 'lucide-react';
 
-const GOLD = '#b88a3c';
-
 type Screen = { id: string; label: string; group: string };
 const screens: Screen[] = [
   {id:'login', label:'1. Login', group:'Access'},
@@ -69,8 +67,10 @@ const patients = [
 
 function Brand({compact=false}:{compact?:boolean}) {
   return <div className={'brand '+(compact?'compact':'')}>
-    <div className="brandmark"><span>✦</span></div>
-    <div><b>BRIGHTY</b><small>DENTAL CLINIC</small></div>
+    <div className="brandmark">
+      <img src="/brighty-logo.png" alt="Brighty Dental Clinic logo" />
+    </div>
+    <div className="brandText"><b>BRIGHTY</b><small>DENTAL CLINIC</small></div>
   </div>
 }
 
@@ -101,7 +101,7 @@ function Login() {
   return <div className="loginScreen">
     <Brand/>
     <div className="loginCenter">
-      <div className="brandHalo">✦</div>
+      <div className="brandHalo"><img src="/brighty-logo.png" alt="Brighty logo" /></div>
       <h1>Welcome Back</h1><p>Sign in to your account</p>
       <label>Email<input placeholder="doctor@brighty.com" /></label>
       <label>Password<input type="password" placeholder="••••••••" /></label>
